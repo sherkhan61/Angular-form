@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {DialogComponent} from "./dialog/dialog.component";
+import {ApiService} from "./services/api.service";
 
 
 @Component({
@@ -8,8 +9,13 @@ import {DialogComponent} from "./dialog/dialog.component";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  constructor(private dialog: MatDialog) {
+export class AppComponent implements OnInit {
+  constructor(private dialog: MatDialog,
+              private api: ApiService) {
+  }
+
+  ngOnInit(): void {
+    this.getAllProducts();
   }
 
   title = 'AngularForm';
@@ -18,5 +24,16 @@ export class AppComponent {
     this.dialog.open(DialogComponent, {
       width: '30%'
     });
+  }
+
+  getAllProducts() {
+    this.api.getProduct().subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+        alert("Error while fetching the Records!")
+      }
+    })
   }
 }
